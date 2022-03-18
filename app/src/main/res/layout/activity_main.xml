@@ -32,7 +32,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Country ISO code"
+                android:text="@string/Country_iso_code"
                 android:textColor="#FFFFFF" />
 
             <EditText
@@ -58,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="City name"
+                android:text="@string/City_name"
                 android:textColor="#FFFFFF" />
 
             <EditText
@@ -85,7 +85,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:backgroundTint="#F4EFEF"
-                android:text="Get info"
+                android:text="@string/Get_info"
                 android:textColor="#212121" />
         </LinearLayout>
 
@@ -101,7 +101,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Temperature"
+                android:text="@string/Temperature"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
 
@@ -119,7 +119,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:gravity="center"
-                android:text="Current"
+                android:text="@string/Current"
                 android:textColor="#FFFFFF" />
 
             <TextView
@@ -138,13 +138,13 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/Minimal"
+                android:id="@+id/Minimum"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="Minimal"
+                android:text="@string/Minimum"
                 android:textColor="#FFFFFF" />
 
             <TextView
@@ -169,7 +169,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Maximum"
+                android:text="@string/Maximum"
                 android:textColor="#FFFFFF" />
 
             <TextView
