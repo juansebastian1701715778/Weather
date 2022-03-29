@@ -9,56 +9,59 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import cafsoft.foundation.HTTPURLResponse;
+import cafsoft.foundation.URLQueryItem;
 import cafsoft.foundation.URLRequest;
 import cafsoft.foundation.URLSession;
 
+import cafsoft.foundation.URLComponents;
+
 public class WeatherService {
 
-    private final String URL_SERVICE = "https://api.openweathermap.org/data/2.5/weather";
     private String theAPIKey = "";
 
-    public WeatherService(String newAPIKey)
-    {
+    public WeatherService (String newAPIKey){
         theAPIKey = newAPIKey;
     }
 
-    public void requestWeatherData(String cityName, String countryCode, OnResponse delegate){
-        final String format = "%s?appid=%s&q=%s,%s&units=metric&lang=es";
+    public void requestWeatherData(String cityName, String countryISOCode, OnDataResponse delegate) {
         URL url = null;
-        String strUrl = "";
+        URLComponents components = new URLComponents();
 
-        strUrl = String.format(format, URL_SERVICE, theAPIKey, cityName, countryCode);
-        try {
-            url = new URL(strUrl);
-        }catch (MalformedURLException e){
-            e.printStackTrace();
-        }
+        components.setScheme("https");
+        components.setHost("api.openweathermap.org");
+        components.setPath("/data/2.5/weather");
+        components.setQueryItems(new URLQueryItem[]{
+                        new URLQueryItem("appid", theAPIKey),
+                        new URLQueryItem("units", "metric"),
+                        new URLQueryItem("lang", "es"),
+                        new URLQueryItem("q", cityName + "," + countryISOCode)
+                }
+        );
 
-        URLRequest request = new URLRequest(url);
+        url = components.getURL();
 
-        URLSession.getShared().dataTask(request, (data, response, error) -> {
+        URLSession.getShared().dataTask(url, (data, response, error) -> {
             HTTPURLResponse resp = (HTTPURLResponse) response;
             Root root = null;
+            int statusCode = -1;
 
-            if(resp.getStatusCode() == 200){
+            if (error == null && resp.getStatusCode() == 200) {
                 String text = data.toText();
-
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-                Gson json = gsonBuilder.create();
-                root =  json.fromJson(text, Root.class);
+                Gson gson = gsonBuilder.create();
+                root = gson.fromJson(text, Root.class);
+                statusCode = resp.getStatusCode();
             }
 
-            if(delegate != null) {
-                delegate.run(resp.getStatusCode(), root);
+            if (delegate != null) {
+                delegate.onChange(error != null, statusCode, root);
             }
         }).resume();
+
     }
 
-    public interface OnResponse {
-        public abstract void run(int statusCode, Root root);
+public interface OnDataResponse {
+        public abstract void onChange(boolean isNetworkError, int statusCode, Root root);
     }
-
-
-
 }
