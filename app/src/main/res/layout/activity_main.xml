@@ -38,11 +38,12 @@
             <EditText
                 android:id="@+id/txtCountryISOCode"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="0.5"
+                android:layout_height="38dp"
+                android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="#000000" />
 
         </LinearLayout>
 
@@ -64,11 +65,12 @@
             <EditText
                 android:id="@+id/txtCityName"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="0.5"
+                android:layout_height="38dp"
+                android:layout_weight="1"
                 android:background="#FFFFFF"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="#000000" />
 
         </LinearLayout>
 

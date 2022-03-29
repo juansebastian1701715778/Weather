@@ -9,7 +9,7 @@ import com.sebastianmejia.weather.services.WeatherService;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String API_KEY = "REPLACE WITH YOUR API KEY...";
+    private final String API_KEY = "8c4add482647e0b84c8ff128415ca746";
     private WeatherService service = null;
 
 
@@ -18,11 +18,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         service = new WeatherService(API_KEY);
+        btnGetWeatherInfoOnClick();
     }
 
     public void btnGetWeatherInfoOnClick() {
 
-        service.requestWeatherData("Madrid", "es", (isNetworkError, statusCode, root)  -> {
+        service.requestWeatherData("Manizales", "co", (isNetworkError, statusCode, root)  -> {
 
             switch (statusCode) {
                 case -1:
