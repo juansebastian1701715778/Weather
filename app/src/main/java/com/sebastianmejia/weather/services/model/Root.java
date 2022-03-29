@@ -1,7 +1,7 @@
 package com.sebastianmejia.weather.services.model;
 
 public class Root {
-    private Main main = null;
+    private Main main;
 
     public Main getMain() { return main; }
 
