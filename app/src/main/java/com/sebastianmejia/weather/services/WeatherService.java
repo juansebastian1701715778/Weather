@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import cafsoft.foundation.HTTPURLResponse;
+import cafsoft.foundation.URLComponents;
 import cafsoft.foundation.URLRequest;
 import cafsoft.foundation.URLSession;
 
@@ -33,6 +34,8 @@ public class WeatherService {
         }catch (MalformedURLException e){
             e.printStackTrace();
         }
+
+
 
         URLRequest request = new URLRequest(url);
 
