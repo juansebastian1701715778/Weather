@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.sebastianmejia.weather.services.CityService;
 import com.sebastianmejia.weather.services.WeatherService;
 
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,15 +26,15 @@ public class MainActivity extends AppCompatActivity {
     private CityService cityService;
 
     private AutoCompleteTextView txtCountryName = null;
-    private EditText txtCityName = null;
+    private AutoCompleteTextView txtCityName = null;
 
     private TextView currentResult = null;
     private TextView minimalResult = null;
     private TextView maximumResult = null;
 
     private Button btnGetWeather = null;
-    private final String LANGUAGE = Locale.getDefault().getLanguage();
-    private String[] currentCities;
+    private final String LANGUAGE = Locale.ENGLISH.getLanguage();
+    private List<String> currentCities = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void initViews(){
+    public void initViews() {
         txtCountryName = findViewById(R.id.txtCountryName);
         txtCityName = findViewById(R.id.txtCityName);
 
@@ -59,64 +60,88 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void initEvents(){
-
+    public void initEvents() {
         btnGetWeather.setOnClickListener(view -> getWeatherInfoOnClick());
-        initAutoComplete();
-        //getCitiesByCountry();
+        //txtCityName.setOnClickListener(view -> initAutoCompleteCity());
+        //txtCountryName.setOnClickListener(view -> resetCities());
+        txtCountryName.setOnItemClickListener((adapterView, view, i, l) -> initAutoCompleteCity());
+        initAutoCompleteCountry();
     }
 
-    public void initAutoComplete(){
+    public void resetCities() {
+        currentCities = null;
+    }
+
+    public void initAutoCompleteCountry() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, getCountryNames(LANGUAGE));
 
         txtCountryName.setAdapter(adapter);
+        currentCities = null;
     }
 
-    public void getCitiesByCountry(){
-        cityService.requestCities("Colombia",
+    public void initAutoCompleteCity() {
+        String currentCountry = txtCountryName.getText().toString();
+
+        if (!currentCountry.isEmpty()) {
+            currentCountry = currentCountry.trim();
+            getCitiesByCountry(currentCountry);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1,
+                    currentCities);
+
+            txtCityName.setAdapter(adapter);
+        }
+    }
+
+
+    public void getCitiesByCountry(String country) {
+        cityService.requestCities(country,
                 ((isNetworkError, statusCode, cities) -> {
-                    if(!isNetworkError){
-                        switch (statusCode){
+                    if (!isNetworkError) {
+                        switch (statusCode) {
                             case 200:
-                                runOnUiThread(() -> {
-                                    String city = cities.getMain().getCities();
-                                });
+                                currentCities = cities.getCitiesList();
                                 break;
                             case 404:
                                 Log.d("Cities", "Country not found");
                                 break;
                         }
-                    }else{
+                    } else {
                         Log.d("Cities", "Network error");
                     }
                 }));
     }
 
-    public void getWeatherInfoOnClick(){
+    public void getWeatherInfoOnClick() {
         service.requestWeatherData(txtCityName.getText().toString(),
                 getISOCodeByName(txtCountryName.getText().toString(), LANGUAGE),
                 ((isNetworkError, statusCode, root) -> {
-            if(!isNetworkError){
-                switch (statusCode){
-                    case 200:
-                        runOnUiThread(() -> {
-                            maximumResult.setText(String.valueOf(root.getMain().getTempMax()));
-                        });
-                        runOnUiThread(() -> {
-                            minimalResult.setText(String.valueOf(root.getMain().getTempMin()));
-                        });
-                        runOnUiThread(() -> {
-                            currentResult.setText(String.valueOf(root.getMain().getTemp()));
-                        });
-                        break;
-                    case 404:
-                        Log.d("Weather", "City not found");
-                        break;
-                }
-            }else{
-                Log.d("Weather", "Network error");
-            }
-        }));
+                    if (!isNetworkError) {
+                        switch (statusCode) {
+                            case 200:
+                                runOnUiThread(() -> {
+                                    maximumResult.setText(String.valueOf(root.getMain().getTempMax()));
+                                });
+                                runOnUiThread(() -> {
+                                    minimalResult.setText(String.valueOf(root.getMain().getTempMin()));
+                                });
+                                runOnUiThread(() -> {
+                                    currentResult.setText(String.valueOf(root.getMain().getTemp()));
+                                });
+                                break;
+                            case 404:
+                                Log.d("Weather", "City not found");
+                                break;
+                        }
+                    } else {
+                        Log.d("Weather", "Network error");
+                    }
+                }));
     }
 }

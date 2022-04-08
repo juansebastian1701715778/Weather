@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import com.sebastianmejia.weather.services.model.Root;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import cafsoft.foundation.HTTPURLResponse;
 import cafsoft.foundation.URLComponents;
@@ -28,15 +30,13 @@ public class CityService {
 
         URLSession.getShared().dataTask(url, (data, response, error) -> {
             HTTPURLResponse resp = (HTTPURLResponse) response;
-            Cities cities = null;
             int statusCode = -1;
+            Cities cities = null;
 
             if (error == null && resp.getStatusCode() == 200) {
                 String text = data.toText();
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-                Gson gson = gsonBuilder.create();
-                cities = gson.fromJson(text, Cities.class);
+                cities = new Cities(text);
+                cities.convertIntoList();
                 statusCode = resp.getStatusCode();
             }
 
@@ -53,18 +53,22 @@ public class CityService {
 
 
     public class Cities {
-        private Main main;
+        private String citiesString;
+        private List<String> citiesList;
 
-        public Main getMain() {
-            return main;
+        public Cities(String citiesString) {
+            this.citiesString = citiesString;
         }
-    }
 
-    public class Main{
-        private String cities;
+        public void convertIntoList(){
+            citiesString = citiesString.replace("[", "");
+            citiesString = citiesString.replace("]", "");
+            citiesString = citiesString.replace("\"", "");
+            citiesList = Arrays.asList(citiesString.split(","));
+        }
 
-        public String getCities() {
-            return cities;
+        public List<String> getCitiesList() {
+            return citiesList;
         }
     }
 }
