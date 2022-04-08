@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Weather</string>
-    <string name="Country_iso_code">Country ISO code</string>
+    <string name="Country_name">Country name</string>
     <string name="City_name">City name</string>
     <string name="Get_info">GET INFO</string>
     <string name="Temperature">Temperature</string>

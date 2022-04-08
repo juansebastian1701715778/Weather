@@ -27,22 +27,20 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/IsoCode"
+                android:id="@+id/CountryName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/Country_iso_code"
+                android:text="@string/Country_name"
                 android:textColor="#FFFFFF" />
 
-            <EditText
-                android:id="@+id/txtCountryISOCode"
+            <AutoCompleteTextView
+                android:id="@+id/txtCountryName"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:layout_weight="1"
                 android:background="#FFFFFF"
-                android:ems="10"
-                android:inputType="textPersonName"
                 android:textColor="#000000" />
 
         </LinearLayout>
@@ -129,7 +127,8 @@
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -155,7 +154,8 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="0"
-                android:gravity="center|center_horizontal|center_vertical" />
+                android:gravity="center|center_horizontal|center_vertical"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -175,12 +175,13 @@
                 android:textColor="#FFFFFF" />
 
             <TextView
-                android:id="@+id/maximunResult"
+                android:id="@+id/maximumResult"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:layout_weight="0"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
     </LinearLayout>

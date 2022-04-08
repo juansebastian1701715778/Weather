@@ -5,44 +5,30 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sebastianmejia.weather.services.model.Root;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import cafsoft.foundation.HTTPURLResponse;
+import cafsoft.foundation.URLComponents;
 import cafsoft.foundation.URLQueryItem;
-import cafsoft.foundation.URLRequest;
 import cafsoft.foundation.URLSession;
 
-import cafsoft.foundation.URLComponents;
-
-public class WeatherService {
-
-    private String theAPIKey = "";
-
-    public WeatherService (String newAPIKey){
-        theAPIKey = newAPIKey;
+public class CityService {
+    public CityService (){
     }
 
-    public void requestWeatherData(String cityName, String countryISOCode, OnDataResponse delegate) {
+    public void requestCities(String country, CityService.OnDataResponse delegate) {
         URL url = null;
         URLComponents components = new URLComponents();
 
         components.setScheme("https");
-        components.setHost("api.openweathermap.org");
-        components.setPath("/data/2.5/weather");
-        components.setQueryItems(new URLQueryItem[]{
-                        new URLQueryItem("appid", theAPIKey),
-                        new URLQueryItem("units", "metric"),
-                        new URLQueryItem("lang", "es"),
-                        new URLQueryItem("q", cityName + "," + countryISOCode)
-                }
-        );
+        components.setHost("shivammathur.com");
+        components.setPath("/countrycity/cities/" + country);
 
         url = components.getURL();
 
         URLSession.getShared().dataTask(url, (data, response, error) -> {
             HTTPURLResponse resp = (HTTPURLResponse) response;
-            Root root = null;
+            Cities cities = null;
             int statusCode = -1;
 
             if (error == null && resp.getStatusCode() == 200) {
@@ -50,18 +36,36 @@ public class WeatherService {
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
                 Gson gson = gsonBuilder.create();
-                root = gson.fromJson(text, Root.class);
+                cities = gson.fromJson(text, Cities.class);
                 statusCode = resp.getStatusCode();
             }
 
             if (delegate != null) {
-                delegate.onChange(error != null, statusCode, root);
+                delegate.onChange(error != null, statusCode, cities);
             }
         }).resume();
 
     }
 
     public interface OnDataResponse {
-        public abstract void onChange(boolean isNetworkError, int statusCode, Root root);
+        public abstract void onChange(boolean isNetworkError, int statusCode, Cities cities);
+    }
+
+
+    public class Cities {
+        private Main main;
+
+        public Main getMain() {
+            return main;
+        }
+    }
+
+    public class Main{
+        private String cities;
+
+        public String getCities() {
+            return cities;
+        }
     }
 }
+
